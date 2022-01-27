@@ -11,23 +11,31 @@ const roomSchema = new Schema({
     type: Number,
     required: true,
   },
+  price: {
+    type: Number,
+    required: true,
+    min: 1,
+  },
   isEmpty: {
     type: Boolean,
     required: true,
   },
   checkInDate: {
     type: Date,
-    required: true,
     get: createdAtVal => dateFormat(createdAtVal),
   },
   checkOutDate: {
     type: Date,
-    required: true,
     get: createdAtVal => dateFormat(createdAtVal),
   },
   guest: {
     type: Schema.Types.ObjectId,
     ref: 'Guest',
+  },
+},
+{
+  toJSON: {
+    getters: true,
   },
 });
 
