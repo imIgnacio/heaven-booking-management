@@ -50,6 +50,7 @@ const typeDefs = gql`
     createGuest(firstName: String!, lastName: String!, phone: Int!, email: String!): Guest
     createRoom(name: String!, maxGuests: Int!, price: Int!): Room
     createBooking(checkInDate: Date!, checkOutDate: Date!, guest: Guest!): Booking
+    updateBooking(_id: String!, checkInDate: Date!, checkOutDate: Date!, guest: Guest!): Booking
   }
 `;
 

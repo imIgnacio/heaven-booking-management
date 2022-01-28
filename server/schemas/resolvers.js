@@ -2,26 +2,33 @@ const { User, Room, Guest } = require('../models');
 
 const resolvers = {
   Query: {
-    user: async () => {
+    users: async () => {
       return User.find({});
     },
-    guest: async () => {
+    guests: async () => {
       return Guest.find({});
     },
-    room: async () => {
+    rooms: async () => {
       return Room.find({});
     },
-    users: async (parent, { _id }) => {
+    bookings: async () => {
+      return Booking.find({});
+    },
+    user: async (parent, { _id }) => {
       const params = _id ? { _id } : {};
       return User.find(params);
     },
-    guests: async (parent, { _id }) => {
+    guest: async (parent, { _id }) => {
       const params = _id ? { _id } : {};
       return Guest.find(params);
     },
-    rooms: async (parent, { _id }) => {
+    room: async (parent, { _id }) => {
       const params = _id ? { _id } : {};
       return Room.find(params);
+    },
+    booking: async (parent, { _id }) => {
+      const params = _id ? { _id } : {};
+      return Booking.find(params);
     },
   },
   Mutation: {
@@ -37,7 +44,11 @@ const resolvers = {
       const room = await Room.create(args);
       return room;
     },
-    createVote: async (parent, { _id, techNum }) => {
+    createBooking: async (parent, args) => {
+      const booking = await Room.create(args);
+      return booking;
+    },
+    updateRoom: async (parent, { _id, techNum }) => {
       const vote = await Matchup.findOneAndUpdate(
         { _id },
         { $inc: { [`tech${techNum}_votes`]: 1 } },
