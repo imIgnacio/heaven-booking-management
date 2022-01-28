@@ -1,6 +1,8 @@
-const { User, Room, Guest } = require('../models');
+const { User, Room, Guest, Booking } = require('../models');
+const { GraphQLScalarType, Kind } = require('graphql');
 
 const resolvers = {
+
   Query: {
     users: async () => {
       return User.find({});
@@ -45,18 +47,43 @@ const resolvers = {
       return room;
     },
     createBooking: async (parent, args) => {
-      const booking = await Room.create(args);
+      const checkIn = new Date(args.checkInDate);
+      const checkOut = new Date(args.checkOutDate);
+
+      console.log(checkIn, checkOut);
+
+      const booking = await Booking.create({
+        checkInDate: checkIn,
+        checkOutDate: checkOut,
+        guest: args.guest
+      });
       return booking;
     },
-    updateRoom: async (parent, { _id, techNum }) => {
-      const vote = await Matchup.findOneAndUpdate(
+    updateBooking: async (parent, { _id, checkInDate, checkOutDate, guest_id }) => {
+      const booking = await Booking.findOneAndUpdate(
         { _id },
-        { $inc: { [`tech${techNum}_votes`]: 1 } },
+        { checkInDate: { checkIn }, checkOutDate: { checkOut }, guest: { guest_id } },
         { new: true }
       );
-      return vote;
+      return booking;
     },
   },
+  Date: new GraphQLScalarType({
+    name: 'Date',
+    description: 'Date custom scalar type',
+    serialize(value) {
+      return value; // Convert outgoing Date to integer for JSON
+    },
+    parseValue(value) {
+      return new Date(value); // Convert incoming integer to Date
+    },
+    parseLiteral(ast) {
+      if (ast.kind === Kind.INT) {
+        return new Date(parseInt(ast.value, 10)); // Convert hard-coded AST string to integer and then to Date
+      }
+      return null; // Invalid hard-coded value (not an integer)
+    },
+  })
 };
 
 module.exports = resolvers;

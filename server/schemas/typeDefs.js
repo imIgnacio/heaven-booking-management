@@ -1,6 +1,9 @@
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
+
+  scalar Date
+
   type Room {
     _id: ID!
     name: String!
@@ -14,7 +17,7 @@ const typeDefs = gql`
     _id: ID!
     checkInDate: Date!
     checkOutDate: Date!
-    guest: Guest!
+    guest: String!
   }
 
   type User {
@@ -30,7 +33,7 @@ const typeDefs = gql`
     _id: ID!
     firstName: String!
     lastName: String!
-    phone: Int!
+    phone: String!
     email: String!
   }
 
@@ -47,10 +50,10 @@ const typeDefs = gql`
 
   type Mutation {
     createUser(username: String!, email: String!, password: String!): User
-    createGuest(firstName: String!, lastName: String!, phone: Int!, email: String!): Guest
+    createGuest(firstName: String!, lastName: String!, phone: String!, email: String!): Guest
     createRoom(name: String!, maxGuests: Int!, price: Int!): Room
-    createBooking(checkInDate: Date!, checkOutDate: Date!, guest: Guest!): Booking
-    updateBooking(_id: String!, checkInDate: Date!, checkOutDate: Date!, guest: Guest!): Booking
+    createBooking(checkInDate: String, checkOutDate: String, guest: String): Booking
+    updateBooking(_id: String!, checkInDate: Date, checkOutDate: Date, guest: String): Booking
   }
 `;
 
